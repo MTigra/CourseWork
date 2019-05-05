@@ -1,7 +1,10 @@
 package sample;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -9,10 +12,12 @@ import javafx.scene.layout.StackPane;
 
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class InfoContoller  extends StackPane {
+public class InfoContoller  extends StackPane implements Initializable {
 
     @FXML
     private Button hideStatus;
@@ -37,7 +42,7 @@ public class InfoContoller  extends StackPane {
     private Label sampleTitle;
 
     @FXML
-    private Label faces;
+    public Label faces;
 
     @FXML
     private HBox content;
@@ -55,13 +60,27 @@ public class InfoContoller  extends StackPane {
     public InfoContoller(){
         super();
         try {
-            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/org/fxyz3d/client/ModelInfo.fxml"));
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/Info.fxml"));
             loader.setController(InfoContoller.this);
             loader.setRoot(InfoContoller.this);
-
             loader.load();
         } catch (IOException ex) {
             System.out.println(ex.toString());
         }
+    }
+
+    @FXML
+    void hideButtonClicked(ActionEvent event) {
+        stackPane.setOpacity(0);
+    }
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        content.setOnMouseEntered(event -> {
+            if(stackPane.getOpacity()!=100)
+                stackPane.setOpacity(100);
+        });
+
     }
 }
