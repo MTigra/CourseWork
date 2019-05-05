@@ -44,10 +44,9 @@
                                         <DropShadow />
                                     </effect>
                                 </StackPane>
-                                <StackPane fx:id="rootContentPane" layoutX="8.0" layoutY="7.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="6.0" />
+                                <StackPane fx:id="contentPane" layoutX="8.0" layoutY="7.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="6.0" />
                             </children>
                         </AnchorPane>
-                        <Pane fx:id="southEastResize" minHeight="-Infinity" minWidth="-Infinity" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                     </children>
                 </AnchorPane>
                 <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" HBox.hgrow="ALWAYS">
@@ -64,7 +63,7 @@
                         </TitledPane>
                         <TitledPane fx:id="titledPane3" animated="false" text="untitled 3">
                             <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <AnchorPane fx:id="acpane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                             </content>
                         </TitledPane>
                     </panes>

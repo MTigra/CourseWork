@@ -2,25 +2,29 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
-import javafx.scene.Parent;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
-import java.net.URL;
 
 public class Main extends Application {
 
+    MainWindowController mainWindowController;
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        Parent root = FXMLLoader.load(getClass().getResource("/Frame.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
+        loader.setController(new MainWindowController());
+        VBox mainWindow = loader.load();
+        mainWindowController = loader.getController();
 
-        primaryStage.setTitle("Hello World");
-        Scene scene = new Scene(root, 1024, 768);
+        primaryStage.setTitle("JavaFx 3D Quaternions");
+        Scene scene = new Scene(mainWindow, 1024, 768);
+
+
+
         primaryStage.setScene(scene);
         primaryStage.show();
-       // InfoContoller ic = new InfoContoller();
 
     }
 
