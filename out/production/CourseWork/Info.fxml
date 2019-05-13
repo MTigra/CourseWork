@@ -27,66 +27,32 @@
                     <children>
                         <HBox>
                             <children>
-                                <Label layoutX="10.0" layoutY="10.0" text="Nodes:  " />
-                                <Label fx:id="nodeCount" text="1024" />
+                                <Label layoutX="10.0" layoutY="10.0" text="X:" />
+                                <Label text="0" fx:id="x" />
                             </children>
                         </HBox>
                         <Pane maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
                         <HBox>
                             <children>
-                                <Label layoutX="10.0" layoutY="10.0" text="Time to Build:  " />
-                                <Label fx:id="timeToBuild" layoutX="231.0" layoutY="10.0" text="300ms" />
+                                <Label layoutX="10.0" layoutY="10.0" text="Y:" />
+                                <Label text="0" fx:id="y" />
                             </children>
                         </HBox>
-                        <Pane layoutX="90.0" layoutY="19.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                        <Pane maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
                         <HBox>
                             <children>
-                                <Label layoutX="38.0" layoutY="10.0" text="Dimensions { " />
-                                <HBox spacing="5.0">
-                                    <children>
-                                        <HBox>
-                                            <children>
-                                                <Label text="W: " />
-                                                <Label fx:id="width" layoutX="235.0" layoutY="10.0" text="100" />
-                                            </children>
-                                        </HBox>
-                                        <HBox>
-                                            <children>
-                                                <Label layoutX="263.0" layoutY="10.0" text="H: " />
-                                                <Label fx:id="height" layoutX="78.0" layoutY="10.0" text="100" />
-                                            </children>
-                                        </HBox>
-                                        <HBox>
-                                            <children>
-                                                <Label layoutX="162.0" layoutY="10.0" text="D: " />
-                                                <Label fx:id="depth" layoutX="190.0" layoutY="10.0" text="100" />
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </HBox>
-                                <Label layoutX="10.0" layoutY="10.0" text=" }" />
+                                <Label layoutX="10.0" layoutY="10.0" text="Z:" />
+                                <Label text="0" fx:id="z" />
                             </children>
                         </HBox>
-                        <Pane layoutX="407.0" layoutY="19.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
-                        <HBox alignment="CENTER" spacing="5.0">
+                        <Pane maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                        <HBox>
                             <children>
-                                <Label layoutX="66.0" layoutY="10.0" text="Mesh Data { " />
-                                <HBox>
-                                    <children>
-                                        <Label layoutX="446.0" layoutY="10.0" text="Points:  " />
-                                        <Label fx:id="points" layoutX="516.0" layoutY="10.0" text="400" />
-                                    </children>
-                                </HBox>
-                                <HBox>
-                                    <children>
-                                        <Label layoutX="75.0" layoutY="10.0" text="Faces: " />
-                                        <Label fx:id="faces" layoutX="205.0" layoutY="10.0" text="150" />
-                                    </children>
-                                </HBox>
-                                <Label layoutX="10.0" layoutY="10.0" text=" } " />
+                                <Label layoutX="10.0" layoutY="10.0" text="W:" />
+                                <Label text="0" fx:id="w" />
                             </children>
                         </HBox>
-                        <Pane layoutX="686.0" layoutY="19.0" maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
+                        <Pane maxHeight="-Infinity" HBox.hgrow="ALWAYS" />
                     </children>
                 </HBox>
             </children>

@@ -9,8 +9,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -22,18 +20,36 @@ public class InfoContoller  extends StackPane implements Initializable {
     @FXML
     private Button hideStatus;
 
+    @FXML
+    private Label w;
+
+    @FXML
+    private Label x;
+
+    @FXML
+    private Label y;
+
+    public Label getW() {
+        return w;
+    }
+
+    public Label getX() {
+        return x;
+    }
+
+    public Label getY() {
+        return y;
+    }
+
+    public Label getZ() {
+        return z;
+    }
+
+    @FXML
+    private Label z;
 
     @FXML
     private StackPane stackPane;
-
-    @FXML
-    private Label depth;
-
-    @FXML
-    private Label width;
-
-    @FXML
-    private Label nodeCount;
 
     @FXML
     private HBox headerArea;
@@ -42,19 +58,7 @@ public class InfoContoller  extends StackPane implements Initializable {
     private Label sampleTitle;
 
     @FXML
-    public Label faces;
-
-    @FXML
     private HBox content;
-
-    @FXML
-    private Label timeToBuild;
-
-    @FXML
-    private Label height;
-
-    @FXML
-    private Label points;
 
 
     public InfoContoller(){

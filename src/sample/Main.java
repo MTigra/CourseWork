@@ -19,7 +19,7 @@ public class Main extends Application {
         mainWindowController = loader.getController();
 
         primaryStage.setTitle("JavaFx 3D Quaternions");
-        Scene scene = new Scene(mainWindow, 1024, 768);
+        Scene scene = new Scene(mainWindow, 1100, 768);
 
 
 
