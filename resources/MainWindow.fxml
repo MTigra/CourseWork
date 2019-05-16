@@ -16,17 +16,19 @@
     <children>
         <MenuBar fx:id="menuBar">
             <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Проект">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem fx:id="cubeMenuButton" mnemonicParsing="false" onAction="#onCubeMenuButtonClicked" text="Куб" />
+                  <MenuItem fx:id="sphereMenuButton" mnemonicParsing="false" onAction="#onSphereMenuButtonClicked" text="Сфера" />
+                  <MenuItem mnemonicParsing="false" text="Закрыть" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
+                <Menu mnemonicParsing="false" text="Вид">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
+                <Menu mnemonicParsing="false" text="Помощь">
                     <items>
                         <MenuItem mnemonicParsing="false" text="About" />
                     </items>
@@ -49,24 +51,21 @@
                         </AnchorPane>
                     </children>
                 </AnchorPane>
-                <Accordion fx:id="accordion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
+                <Accordion maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
                     <panes>
-                        <TitledPane fx:id="titledPane1" animated="false" text="untitled 1">
+                        <TitledPane text="Преобразование">
                      <content>
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                            <children>
-                              <HBox minHeight="-Infinity" minWidth="-Infinity">
-                                 <children>
-                                    <Slider fx:id="degreeSlider" majorTickUnit="10.0" max="360.0" HBox.hgrow="ALWAYS" />
-                                    <Label fx:id="degreeLabel" text="Label" />
-                                 </children>
+                              <HBox fx:id="sliderHbox" minHeight="-Infinity" minWidth="-Infinity">
+
                               </HBox>
                               <Separator prefWidth="200.0" />
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <VBox prefHeight="100.0" prefWidth="178.0">
+                                    <VBox fx:id="axisVbox" prefHeight="100.0" prefWidth="178.0">
                                        <children>
-                                          <Label alignment="CENTER_RIGHT" text="Ось вразения">
+                                          <Label alignment="CENTER_RIGHT" text="Ось вращения">
                                              <opaqueInsets>
                                                 <Insets />
                                              </opaqueInsets>
@@ -82,7 +81,7 @@
                               </Separator>
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <VBox prefHeight="100.0" prefWidth="178.0">
+                                    <VBox fx:id="quaternionVbox" prefHeight="100.0" prefWidth="178.0">
                                        <children>
                                           <Label alignment="CENTER_RIGHT" text="Кватернион:">
                                              <opaqueInsets>
@@ -97,16 +96,6 @@
                            </children>
                         </VBox>
                      </content>
-                        </TitledPane>
-                        <TitledPane fx:id="titledPane2" animated="false" text="resources">
-                            <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                            </content>
-                        </TitledPane>
-                        <TitledPane fx:id="titledPane3" animated="false" text="untitled 3">
-                            <content>
-                                <AnchorPane fx:id="acpane" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                            </content>
                         </TitledPane>
                     </panes>
                 </Accordion>

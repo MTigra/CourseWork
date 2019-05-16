@@ -2,19 +2,12 @@ package sample;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
-import javafx.scene.input.PickResult;
-import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class RotatingCylinder extends Cylinder {
+public class P2PCylinder extends Cylinder {
 
     private double anchorX = 0;
     private double anchorY = 0;
@@ -24,23 +17,23 @@ public class RotatingCylinder extends Cylinder {
     private final DoubleProperty angleY = new SimpleDoubleProperty(0);
     private Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
     private Rotate rotateY = new Rotate(0, Rotate.Z_AXIS);
+    Point3D origin;
+    Point3D target;
 
-    RotatingCylinder(){
-        super(3,130);
-       // Rotations();
+    P2PCylinder(){
+        this(new Point3D(0,0,0),new Point3D(0,0,0));
     }
 
-    RotatingCylinder(Point3D start, Point3D end){
+    P2PCylinder(Point3D origin, Point3D target) {
         super();
-//        this.setTranslateX(start.getX());
-//        this.setTranslateY(start.getY());
-//        this.setTranslateZ(start.getZ());
-        createConnection(start,end);
-        //Rotations();
+        this.origin=origin;
+        this.target=target;
+        createConnection(origin, target);
+
     }
 
-    private void Rotations(){
-        getTransforms().addAll(rotateX,rotateY);
+    private void Rotations() {
+        getTransforms().addAll(rotateX, rotateY);
         rotateX.angleProperty().bind(angleX);
         rotateY.angleProperty().bind(angleY);
         System.out.println("KKFZDD");
@@ -60,6 +53,7 @@ public class RotatingCylinder extends Cylinder {
     }
 
     public void createConnection(Point3D origin, Point3D target) {
+        this.getTransforms().removeAll(this.getTransforms());
         Point3D yAxis = new Point3D(0, 1, 0);
         Point3D diff = target.subtract(origin);
         double height = diff.magnitude();
@@ -75,6 +69,8 @@ public class RotatingCylinder extends Cylinder {
         this.setHeight(height);
 
         this.getTransforms().addAll(moveToMidpoint, rotateAroundCenter);
+        this.origin=origin;
+        this.target=target;
     }
 
 }

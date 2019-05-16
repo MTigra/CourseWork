@@ -1,84 +1,72 @@
 package sample;
 
 import javafx.beans.property.*;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
 import javafx.geometry.Pos;
 import javafx.scene.*;
-import com.sun.javafx.geom.Quat4f;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.PickResult;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.*;
-import javafx.scene.transform.*;
+import javafx.scene.shape.Box;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.Shape3D;
+import javafx.scene.shape.Sphere;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
+import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainWindowController implements Initializable {
 
     @FXML
     private MenuBar menuBar;
-
     @FXML
     private Accordion accordion;
-
     @FXML
     private Pane southEastResize;
-
     @FXML
     private VBox MainWindow;
-
     @FXML
     private StackPane contentPane;
-
     @FXML
-    private TitledPane titledPane1;
-
+    private VBox quaternionVbox;
     @FXML
-    private TitledPane titledPane2;
-
+    private VBox axisVbox;
     @FXML
-    private TitledPane titledPane3;
-
-
+    private MenuItem cubeMenuButton;
     @FXML
-    private Slider degreeSlider;
-
+    private MenuItem sphereMenuButton;
     @FXML
-    private Label degreeLabel;
-
-    @FXML
-    private TextField axisX;
-
-    @FXML
-    private TextField axisY;
-
-    @FXML
-    private TextField axisZ;
+    private HBox sliderHbox;
 
     private static final double ZOOM_SENSITIVITY = 0.2;
-
     private static final int ZOOM_MIN = 80;
     private static final int ZOOM_MAX = 2000;
 
     private PerspectiveCamera camera;
     Group g;
     Shape3D box;
-    SubScene axisScene;
+    private SubScene axisScene;
     private SubScene subScene;
-    Cylinder c;
+    P2PCylinder c;
     Point3D end;
-    ObjectProperty<Point3D> point3dprop = new SimpleObjectProperty<Point3D>(new Point3D(0,0,0));
+    QuaternionSphere sphere;
+    ObjectProperty<Point3D> point3dprop = new SimpleObjectProperty<Point3D>(new Point3D(0, 0, 0));
     private double anchorX = 0;
     private double anchorY = 0;
     private double anchorAngleX = 0;
@@ -88,10 +76,13 @@ public class MainWindowController implements Initializable {
     private final IntegerProperty degreeProperty = new SimpleIntegerProperty(0);
     private Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
     private Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
-    private Translate zoom = new Translate(0, -16, -200);
-    private boolean drawC=false;
+    private Translate zoom = new Translate(0, 0, -200);
+    private boolean drawC = false;
+    QuaternionGridPane quaternionGridPane;
+    AxisGridPane axisGridPane;
 
-    InfoContoller ic;
+
+
     public MenuBar getMenuBar() {
         return menuBar;
     }
@@ -112,17 +103,6 @@ public class MainWindowController implements Initializable {
         return contentPane;
     }
 
-    public TitledPane getTitledPane1() {
-        return titledPane1;
-    }
-
-    public TitledPane getTitledPane2() {
-        return titledPane2;
-    }
-
-    public TitledPane getTitledPane3() {
-        return titledPane3;
-    }
     Matrix4x3 mat = new Matrix4x3();
 
 
@@ -136,34 +116,24 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ic = new InfoContoller();
-        prepareSubscene();
-        prepareAxisScene();
-        prepareQuaternionSupport();
 
 
-        subScene.widthProperty().bind(contentPane.widthProperty());
-        subScene.heightProperty().bind(contentPane.heightProperty());
-        ic.prefWidthProperty().bind(contentPane.widthProperty());
-
-        contentPane.getChildren().add(subScene);
-        contentPane.getChildren().add(ic);
-        contentPane.setAlignment(ic, Pos.BOTTOM_CENTER);
-        axisScene.toFront();
+//        quaternionGridPane.prefWidthProperty().bind(contentPane.widthProperty());
 
     }
 
     Point3D pointStart;
 
-    private void prepareQuaternionSupport() {
-
+    private void prepareQuaternionSupport(ProjectType type) {
+        c = new P2PCylinder();
+        axisGridPane.setC(c);
         subScene.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
             if (!drawC) {
                 if (event.isAltDown()) {
                     System.out.println(event.getPickResult());
-                    pointStart = new Point3D(0,0,0);
+                    pointStart = new Point3D(0, 0, 0);
                     System.out.println(pointStart);
-                    drawC=true;
+                    drawC = true;
 
                 }
             }
@@ -172,12 +142,12 @@ public class MainWindowController implements Initializable {
         subScene.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
             if (event.isAltDown()) {
                 if (drawC) {
-                 //   int idx = g.getChildren().indexOf(c);
+                    int idx = g.getChildren().indexOf(c);
                     System.out.println(camera.getRotationAxis());
                     System.out.println(camera.getTransforms());
-                    Point3D subsceneCenter = new Point3D(subScene.getWidth()/2, subScene.getHeight()/2,subScene.getTranslateZ());
+                    Point3D subsceneCenter = new Point3D(subScene.getWidth() / 2, subScene.getHeight() / 2, subScene.getTranslateZ());
 
-                    end = new Point3D(event.getSceneX()-subsceneCenter.getX(),event.getSceneY()-subsceneCenter.getY(),event.getZ());
+                    end = new Point3D(event.getSceneX() - subsceneCenter.getX(), event.getSceneY() - subsceneCenter.getY(), event.getZ());
 
                     System.out.println(end);
                     end = rotateY.transform(end);
@@ -185,49 +155,12 @@ public class MainWindowController implements Initializable {
                     end = rotateX.transform(end);
                     point3dprop.setValue(end);
 
-                    axisX.textProperty().setValue(String.valueOf(point3dprop.get().getX()));
-                    axisY.textProperty().setValue(String.valueOf(point3dprop.get().getY()));
-                    axisZ.textProperty().setValue(String.valueOf(point3dprop.get().getZ()));
-
-                    axisX.textProperty().addListener((observable, oldValue, newValue) -> {
-                        point3dprop.setValue(new Point3D(Double.parseDouble(newValue),point3dprop.get().getY(),point3dprop.get().getZ()));
-                        axisX.setText(String.valueOf(point3dprop.get().getX()));
-
-                        int idx = g.getChildren().indexOf(c);
-                        c = new RotatingCylinder(pointStart, point3dprop.get());
-                        if(idx!=-1)
-                            g.getChildren().set(idx,c);
-                        else g.getChildren().add(c);
-                    });
-
-                    axisY.textProperty().addListener((observable, oldValue, newValue) -> {
-                        point3dprop.setValue(new Point3D(point3dprop.get().getX(),Double.parseDouble(newValue),point3dprop.get().getZ()));
-                        axisX.setText(String.valueOf(point3dprop.get().getX()));
-
-                        int idx = g.getChildren().indexOf(c);
-                        c = new RotatingCylinder(pointStart, point3dprop.get());
-                        if(idx!=-1)
-                            g.getChildren().set(idx,c);
-                        else g.getChildren().add(c);
-                    });
-
-                    axisZ.textProperty().addListener((observable, oldValue, newValue) -> {
-                        point3dprop.setValue(new Point3D(point3dprop.get().getX(),point3dprop.get().getY(),Double.parseDouble(newValue)));
-                        axisX.setText(String.valueOf(point3dprop.get().getX()));
-
-                        int idx = g.getChildren().indexOf(c);
-                        c = new RotatingCylinder(pointStart, point3dprop.get());
-                        if(idx!=-1)
-                            g.getChildren().set(idx,c);
-                        else g.getChildren().add(c);
-                    });
-
-//                    System.out.println(end);
-//                    c = new RotatingCylinder(pointStart, end);
-//
-//                    if(idx!=-1)
-//                        g.getChildren().set(idx,c);
-//                    else g.getChildren().add(c);
+                    System.out.println(end);
+                    c = new P2PCylinder(pointStart, end);
+                    axisGridPane.setC(c);
+                    if (idx != -1)
+                        g.getChildren().set(idx, c);
+                    else g.getChildren().add(c);
                 }
             }
         });
@@ -236,52 +169,95 @@ public class MainWindowController implements Initializable {
             drawC = false;
         });
 
-        //box.getTransforms().setAll(mat);
-        //binding degree slider
-        degreeSlider.valueProperty().addListener((obs, oldval, newVal) ->
-                degreeSlider.setValue(newVal.intValue()));
+        if (type == ProjectType.CUBE) {
+            box.getTransforms().setAll(mat);
+            //    binding degree slider
+            Slider degreeSlider = new Slider(0, 360, 0);
+            Label degreeLabel = new Label(null);
+            sliderHbox.getChildren().removeAll(sliderHbox.getChildren());
+            sliderHbox.getChildren().addAll(degreeSlider, degreeLabel);
 
-        degreeProperty.bind(degreeSlider.valueProperty());
-        degreeLabel.textProperty().bind(degreeSlider.valueProperty().asString());
+            degreeSlider.valueProperty().addListener((obs, oldval, newVal) ->
+                    degreeSlider.setValue(newVal.intValue()));
 
-        degreeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            double alpha = newValue.doubleValue();
-            double cos = cos(alpha/2);
-            double sin= sin(alpha/2);
-            Point3D norm = point3dprop.get().normalize();
-            Matrix4x3 mat = new Matrix4x3();
-            Quat4f qt = new Quat4f((float)( norm.getX()*sin), (float)(norm.getY()*sin),(float)(norm.getZ()*sin), (float)cos);
-            box.getTransforms().setAll(mat.rotateGeneric(qt));
-            ic.getX().setText(String.valueOf(qt.x));
-            ic.getY().setText(String.valueOf(qt.y));
-            ic.getZ().setText(String.valueOf(qt.z));
-            ic.getW().setText(String.valueOf(qt.w));
-        });
+            degreeProperty.bind(degreeSlider.valueProperty());
+            degreeLabel.textProperty().bind(degreeSlider.valueProperty().asString());
 
+            degreeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+                double alpha = newValue.doubleValue();
+                double cos = cos(alpha / 2);
+                double sin = sin(alpha / 2);
+                Point3D norm = point3dprop.get().normalize();
+                Matrix4x3 mat = new Matrix4x3();
+                Quaternion qt = new Quaternion((norm.getX() * sin), (norm.getY() * sin), (norm.getZ() * sin), cos);
+                box.getTransforms().setAll(mat.rotate(qt));
+                quaternionGridPane.setInfo(qt);
+            });
+        }
 
 
     }
 
 
-    private void prepareSubscene() {
-        g = new Group();
-        box = new Box(100, 100, 100);
-        box.setDrawMode(DrawMode.FILL);
-        PhongMaterial material = new PhongMaterial();
+    private void prepareSubscene(ProjectType type) {
+        if (type == ProjectType.CUBE) {
+            g = new Group();
+            box = new Box(100, 100, 100);
+            box.setDrawMode(DrawMode.FILL);
+            PhongMaterial material = new PhongMaterial();
 
-        material.setDiffuseMap(new Image("/diamond.jpg"));
-        box.setMaterial(material);
-        box.setPickOnBounds(true);
-        g.getChildren().add(box);
+            material.setDiffuseMap(new Image("/diamond.jpg"));
+            box.setMaterial(material);
+            box.setPickOnBounds(true);
+            g.getChildren().add(box);
 
 
+            subScene = new SubScene(g, 400, 400, true, SceneAntialiasing.BALANCED);
+            subScene.setFill(Color.TRANSPARENT);
+            prepareCamera();
+            addCameraRotations();
+            subScene.setCamera(camera);
+        }
+        if (type == ProjectType.SPHERE) {
+            g = new Group();
+            sphere = new QuaternionSphere(40);
+            sphere.setDrawMode(DrawMode.LINE);
+            Group sphereGroup = new Group();
+            sphereGroup.getChildren().add(sphere);
+            g.getChildren().add(sphereGroup);
+            AtomicInteger clicks = new AtomicInteger();
+            ArrayList<Node> sphereChildren = new ArrayList<>();
+            ArrayList<Node> groupChildren = new ArrayList<>();
+            g.setOnMousePressed(event -> {
+                clicks.getAndIncrement();
+                if(clicks.get()>=3){
+                    sphereGroup.getChildren().removeAll(sphereChildren);
+                    g.getChildren().removeAll(groupChildren);
+                    clicks.set(1);
+                }
+                Sphere s = new Sphere(2);
+                Point3D point = event.getPickResult().getIntersectedPoint();
+                s.setTranslateX(point.getX());
+                s.setTranslateY(point.getY());
+                s.setTranslateZ(point.getZ());
+                if(clicks.get()<2){
+                    groupChildren.add(s);
+                    g.getChildren().add(s);
+                }else {
+                    sphereChildren.add(s);
+                    sphereGroup.getChildren().add(s);
+                }
 
-        subScene = new SubScene(g, 400, 400, true, SceneAntialiasing.BALANCED);
-        subScene.setFill(Color.TRANSPARENT);
-        prepareCamera();
-        addCameraRotations();
-        subScene.setCamera(camera);
+                System.out.println("Picked placed");
+            });
 
+
+            subScene = new SubScene(g, 400, 400, true, SceneAntialiasing.BALANCED);
+            subScene.setFill(Color.TRANSPARENT);
+            prepareCamera();
+            addCameraRotations();
+            subScene.setCamera(camera);
+        }
 
     }
 
@@ -310,21 +286,14 @@ public class MainWindowController implements Initializable {
 
 
     private void addCameraRotations() {
-
-
         camera.getTransforms().addAll(rotateX, rotateY, zoom);
         rotateX.angleProperty().bind(angleX);
         rotateY.angleProperty().bind(angleY);
 
-
         subScene.setOnMousePressed(me -> {
             PickResult pr = me.getPickResult();
-            Point2D texcoord = pr.getIntersectedTexCoord();
-            PhongMaterial pm = (PhongMaterial) box.getMaterial();
-            // pr.getIntersectedNode().getme
             subScene.requestFocus();
             System.out.println(pr);
-            //System.out.println(me);
             anchorX = me.getSceneX();
             anchorY = me.getSceneY();
             anchorAngleX = angleX.get();
@@ -333,7 +302,6 @@ public class MainWindowController implements Initializable {
 
         subScene.setOnMouseDragged(event -> {
             if (!event.isAltDown()) {
-                //  System.out.println(camera.getTransforms());
                 angleX.set(((anchorAngleX - (anchorY - event.getSceneY())) % 360 + 540) % 360 - 180);
                 angleY.set(((anchorAngleY + anchorX - event.getSceneX()) % 360 + 540) % 360 - 180);
             }
@@ -343,7 +311,7 @@ public class MainWindowController implements Initializable {
             if (event.getCode() == KeyCode.R) {
                 angleX.set(0);
                 angleY.set(0);
-                g.getChildren().remove(c);
+                //g.getChildren().remove(c);
                 drawC = false;
             }
         });
@@ -366,9 +334,79 @@ public class MainWindowController implements Initializable {
         return axisGroup;
     }
 
-    private void prepareTextures(){
+    private void prepareTextures() {
 
     }
 
+    @FXML
+    void onCubeMenuButtonClicked(ActionEvent event) {
+        newProject();
+        axisGridPane = new AxisGridPane();
+        quaternionGridPane = new QuaternionGridPane();
+        prepareSubscene(ProjectType.CUBE);
+
+        prepareAxisScene();
+        prepareQuaternionSupport(ProjectType.CUBE);
+
+
+        contentPane.getChildren().add(subScene);
+        axisVbox.getChildren().add(axisGridPane);
+        quaternionVbox.getChildren().add(quaternionGridPane);
+
+        subScene.widthProperty().bind(contentPane.widthProperty());
+        subScene.heightProperty().bind(contentPane.heightProperty());
+        subScene.setManaged(false);
+        axisScene.toFront();
+    }
+
+    private void newProject() {
+
+        contentPane.getChildren().removeAll(contentPane.getChildren());
+        axisVbox.getChildren().removeAll(axisVbox.getChildren());
+        quaternionVbox.getChildren().removeAll(quaternionVbox.getChildren());
+        angleX.set(0);
+        angleY.set(0);
+
+    }
+
+    @FXML
+    void onSphereMenuButtonClicked(ActionEvent event) {
+        newProject();
+        prepareSubscene(ProjectType.SPHERE);
+        prepareAxisScene();
+        // prepareQuaternionSupport();
+        quaternionGridPane = new QuaternionGridPane();
+
+        Slider durationSlider = new Slider(1, 15, 3);
+        Label durationLabel = new Label(null);
+        sliderHbox.getChildren().removeAll(sliderHbox.getChildren());
+        sliderHbox.getChildren().addAll(durationSlider, durationLabel);
+
+        durationSlider.valueProperty().addListener((obs, oldval, newVal) ->
+                durationSlider.setValue(newVal.intValue()));
+
+
+        durationLabel.textProperty().bind(durationSlider.valueProperty().asString());
+
+        contentPane.getChildren().add(subScene);
+        Button btn = new Button("Play");
+        btn.setOnMouseClicked(event1 -> {
+            sphere.setDuration(Duration.seconds(durationSlider.getValue()));
+            sphere.play();
+            quaternionGridPane.setInfo(sphere.getState());
+        });
+        axisVbox.getChildren().add(btn);
+        quaternionVbox.getChildren().add(quaternionGridPane);
+
+        subScene.widthProperty().bind(contentPane.widthProperty());
+        subScene.heightProperty().bind(contentPane.heightProperty());
+        subScene.setManaged(false);
+        axisScene.toFront();
+    }
+
+
 }
 
+enum ProjectType {
+    CUBE, SPHERE, IMPORT;
+}

@@ -2,16 +2,16 @@ package sample;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
 
     MainWindowController mainWindowController;
+
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
         loader.setController(new MainWindowController());
@@ -20,7 +20,6 @@ public class Main extends Application {
 
         primaryStage.setTitle("JavaFx 3D Quaternions");
         Scene scene = new Scene(mainWindow, 1100, 768);
-
 
 
         primaryStage.setScene(scene);
