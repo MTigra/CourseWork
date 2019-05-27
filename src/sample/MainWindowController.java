@@ -221,7 +221,7 @@ public class MainWindowController implements Initializable {
         if (type == ProjectType.SPHERE) {
             g = new Group();
             sphere = new QuaternionSphere(40);
-            sphere.setDrawMode(DrawMode.LINE);
+            sphere.setDrawMode(DrawMode.FILL);
             Group sphereGroup = new Group();
             sphereGroup.getChildren().add(sphere);
             g.getChildren().add(sphereGroup);
